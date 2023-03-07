@@ -1,0 +1,16 @@
+reviewers:
+  defaults:
+    - muhsintiket
+    - fahrinh
+    - shalhanpilli
+    - tafaquh-fiddin
+    - davidasync19
+    - rizqitiket
+    - chriscassidy-tiket
+    
+
+options:
+  ignore_draft: true
+  ignored_keywords:
+    - DO NOT REVIEW
+  enable_group_assignment: true
