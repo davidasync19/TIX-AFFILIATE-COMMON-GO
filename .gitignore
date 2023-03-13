@@ -1,0 +1,4 @@
+go.work.sum
+**/vendor
+.vscode
+**/playground

@@ -1,4 +1,4 @@
-module github.com/tiket/TIX-AFFILIATE-COMMON-GO
+module github.com/tiket/TIX-AFFILIATE-COMMON-GO/toggle
 
 go 1.20
 
