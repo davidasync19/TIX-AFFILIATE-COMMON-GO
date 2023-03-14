@@ -7,10 +7,12 @@ import (
 
 	"github.com/tiket/TIX-AFFILIATE-COMMON-GO/http_client_builder/http_plugin"
 	logs "github.com/tiket/TIX-HOTEL-UTILITIES-GO/logs/v2"
+	"github.com/tiket/TIX-HOTEL-UTILITIES-GO/metrics"
 )
 
 type HttpClientBuilder struct {
 	logger     logs.LoggerV2
+	monitor    metrics.MonitorStatsd
 	retryCount int
 	timeoutSec int
 }
@@ -18,13 +20,19 @@ type HttpClientBuilder struct {
 func NewHttpClientBuilder() *HttpClientBuilder {
 	return &HttpClientBuilder{
 		logger:     nil,
+		monitor:    nil,
+		timeoutSec: 3,
 		retryCount: 0,
-		timeoutSec: 10,
 	}
 }
 
 func (hcb *HttpClientBuilder) SetTimeout(timeoutSec int) *HttpClientBuilder {
 	hcb.timeoutSec = timeoutSec
+	return hcb
+}
+
+func (hcb *HttpClientBuilder) SetMonitor(monitor metrics.MonitorStatsd) *HttpClientBuilder {
+	hcb.monitor = monitor
 	return hcb
 }
 
@@ -47,6 +55,11 @@ func (hcb *HttpClientBuilder) Build() *httpclient.Client {
 	if hcb.logger != nil {
 		requestLogger := http_plugin.NewRequestResponseLogger(hcb.logger)
 		client.AddPlugin(requestLogger)
+	}
+
+	if hcb.monitor != nil {
+		metricSubmiter := http_plugin.NewMetricSubmiter(hcb.monitor)
+		client.AddPlugin(metricSubmiter)
 	}
 
 	return client
